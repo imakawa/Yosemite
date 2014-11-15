@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Panel xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		  xmlns:s="library://ns.adobe.com/flex/spark" 
+		  xmlns:mx="library://ns.adobe.com/flex/mx" width="400" height="300">
+	<s:layout>
+		<s:VerticalLayout/>
+	</s:layout>
+	
+	<fx:Script>
+		<![CDATA[
+			import mx.controls.Alert;
+			import mx.managers.PopUpManager;
+			import mx.rpc.events.FaultEvent;
+			import mx.rpc.events.ResultEvent;
+			protected function btnClose_clickHandler():void
+			{
+				PopUpManager.removePopUp(this);
+			}
+			protected function btnCreate_clickHandler():void
+			{
+				var chanel:ChanelVO = new ChanelVO()
+					chanel.req = Number(this.creq.text);
+					chanel.name = this.cname.text;
+					chanel.action = this.caction.text;
+				service.Create(chanel);
+			}
+			protected function agent_faultHandler(event:FaultEvent):void
+			{
+				Alert.show("失败信:"+event.message.toString());
+			}
+		]]>
+	</fx:Script>
+	
+	<fx:Declarations>
+	<mx:RemoteObject id="service" destination="ChanelService" fault="{agent_faultHandler(event);}">
+		<mx:method name="Create" result="{btnClose_clickHandler();}"/>
+	</mx:RemoteObject>
+	</fx:Declarations>
+	<mx:Button id="btnClose"  label="关闭页面" click="btnClose_clickHandler()" />
+	
+    <s:Group>
+		<s:layout>
+			<s:HorizontalLayout/>
+		</s:layout>
+		<s:Label text="Req: "/> 
+		<s:TextInput id="creq"/>
+	</s:Group>
+	
+	<s:Group>
+		<s:layout>
+			<s:HorizontalLayout/>
+		</s:layout>
+		<s:Label text="Name:"/> 
+		<s:TextInput id="cname"/>
+	</s:Group>
+	
+	<s:Group>
+		<s:layout>
+			<s:HorizontalLayout/>
+		</s:layout>
+		<s:Label text="Action:"/> 
+		<s:TextInput id="caction"/>
+	</s:Group>
+	
+	<mx:Button id="btnCreate"  label="登録" click="btnCreate_clickHandler()" />
+</s:Panel>

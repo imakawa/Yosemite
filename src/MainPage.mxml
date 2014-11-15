@@ -3,22 +3,19 @@
 			   xmlns:s="library://ns.adobe.com/flex/spark"
 			   xmlns:mx="library://ns.adobe.com/flex/mx" minWidth="955"
 			   minHeight="600">
-	<s:layout>
-		<s:VerticalLayout horizontalAlign="center" paddingTop="100"/>
-	</s:layout>
 	<fx:Script>
 		<![CDATA[
 			import mx.controls.Alert;
-			import mx.managers.PopUpManager;
 			import mx.rpc.events.FaultEvent;
 			import mx.rpc.events.ResultEvent;
-			
+			import mx.managers.PopUpManager;
 			protected function btnSend_clickHandler(event:MouseEvent):void
 			{
-			/*	agent.getInfo(txtSend.text);*/
+				agent.getInfo(txtSend.text);
 			}
 			protected function agent_resultHandler(event:ResultEvent):void
 			{
+				txtReceive.text=event.result as String;
 			}
 			protected function agent_faultHandler(event:FaultEvent):void
 			{
@@ -26,15 +23,11 @@
 			}
 			protected function btnClear_clickHandler(event:MouseEvent):void
 			{
+				/*txtSend.text="";
+				txtReceive.text="";*/
+				PopUpManager.removePopUp(this);
 			}			
-			
-			public function openChannelManagement():void
-			{
-				var channel:W_Channel = new W_Channel()
-				PopUpManager.addPopUp(channel, this, true);
-				PopUpManager.centerPopUp(channel)
-			}
-		]]>	
+		]]>
 	</fx:Script>
 	
 	<fx:Declarations>
@@ -45,15 +38,15 @@
 		</mx:RemoteObject>
 	</fx:Declarations>
 	
-	<s:Panel x="50" y="50" width="250" height="200" title="MasterDataManagement">
-		<s:layout>
-			<s:VerticalLayout horizontalAlign="center" paddingTop="20"/>
-		</s:layout>
-		<s:Button id="btn0"  label="网站菜单管理" click="openChannelManagement()"/>
-		<s:Button id="btn1"  label="商品管理" click="openChannelManagement()"/>
-		<s:Button id="btn2"  label="首页展示商品管理" click="openChannelManagement()"/>
-		<s:Button id="btn3"  label="首页人气商品管理" click="openChannelManagement()"/>
-		
+	<s:Panel x="56" y="129" width="250" height="200" title="客户发送端">
+		<s:Button id="btnSend" x="146" y="129" label="发送"
+				  click="btnSend_clickHandler(event)"/>
+		<s:TextArea id="txtSend" x="8" y="11" width="232" height="106"/>
+		<s:Button id="btnClear" x="37" y="130" label="清空"
+				  click="btnClear_clickHandler(event)"/>	
 	</s:Panel>
 	
+	<s:Panel x="390" y="129" width="250" height="200" title="客户接收端">
+		<s:TextArea id="txtReceive" x="10" y="10" width="228"/>
+	</s:Panel>
 </s:Application>

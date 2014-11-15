@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Application xmlns:fx="http://ns.adobe.com/mxml/2009" 
+			   xmlns:s="library://ns.adobe.com/flex/spark" 
+			   xmlns:mx="library://ns.adobe.com/flex/mx" minWidth="955" minHeight="600">
+	<s:layout>
+		<s:VerticalLayout/>
+	</s:layout>
+	<fx:Declarations>
+		<!-- 非ビジュアルエレメント (サービス、値オブジェクトなど) をここに配置 -->
+	</fx:Declarations>
+	
+	<fx:Script>
+		<![CDATA[
+			import mx.managers.PopUpManager;
+			protected function btnClose_clickHandler(event:MouseEvent):void
+			{
+				PopUpManager.removePopUp(this);
+			}		
+		]]>
+	</fx:Script>
+	
+	
+	<mx:Button id="btnClose"  label="关闭页面" click="btnClose_clickHandler" />
+	<mx:Button id="btnAdd"  label="追加" click="" />
+	<mx:DataGrid>
+		<mx:columns>
+			<mx:DataGridColumn headerText="ID" editable="false" />
+			<mx:DataGridColumn headerText="Req" editable="false" />
+			<mx:DataGridColumn headerText="Name" editable="true" />
+			<mx:DataGridColumn headerText="Action" editable="true" />
+			<mx:DataGridColumn headerText="更新" editable="false" />
+			<mx:DataGridColumn headerText="删除" editable="false" />
+		</mx:columns>
+	</mx:DataGrid>
+</s:Application>
