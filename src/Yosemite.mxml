@@ -34,6 +34,13 @@
 				PopUpManager.addPopUp(channel, this, true);
 				PopUpManager.centerPopUp(channel)
 			}
+			
+			public function openProductManagement():void
+			{
+				var product:W_Product = new W_Product()
+				PopUpManager.addPopUp(product, this, true);
+				PopUpManager.centerPopUp(product)
+			}
 		]]>	
 	</fx:Script>
 	
@@ -50,7 +57,7 @@
 			<s:VerticalLayout horizontalAlign="center" paddingTop="20"/>
 		</s:layout>
 		<s:Button id="btn0"  label="网站菜单管理" click="openChannelManagement()"/>
-		<s:Button id="btn1"  label="商品管理" click="openChannelManagement()"/>
+		<s:Button id="btn1"  label="商品管理" click="openProductManagement()"/>
 		<s:Button id="btn2"  label="首页展示商品管理" click="openChannelManagement()"/>
 		<s:Button id="btn3"  label="首页人气商品管理" click="openChannelManagement()"/>
 		

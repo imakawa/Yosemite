@@ -1,19 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <s:Panel xmlns:fx="http://ns.adobe.com/mxml/2009" 
-		 xmlns:s="library://ns.adobe.com/flex/spark" 
-		 xmlns:mx="library://ns.adobe.com/flex/mx" width="800" height="600"
-		 title="网站菜单管理" creationComplete="pageLoad()">
-	<s:layout>
-		<s:VerticalLayout/>
-	</s:layout>
+		  xmlns:s="library://ns.adobe.com/flex/spark" 
+		  xmlns:mx="library://ns.adobe.com/flex/mx" width="1000" height="700" creationComplete="pageLoad()">
 	<fx:Declarations>
 		<!-- 非ビジュアルエレメント (サービス、値オブジェクトなど) をここに配置 -->
-<!--		<mx:RemoteObject id="service" destination="ChanelService"
-						 result="agent_resultHandler(event)"
-						 fault="agent_faultHandler(event)">
+		<!--		<mx:RemoteObject id="service" destination="ChanelService"
+		result="agent_resultHandler(event)"
+		fault="agent_faultHandler(event)">
 		</mx:RemoteObject>-->
 		
-		<mx:RemoteObject id="service" destination="ChanelService" fault="{agent_faultHandler(event);}">
+		<mx:RemoteObject id="service" destination="ProductService" fault="{agent_faultHandler(event);}">
 			<mx:method name="Read" result="{showdata(event);}"/>
 			<mx:method name="Update" result="{updateResult(event);}"/>
 			<mx:method name="Delete" result="{showdata(event);}"/>
@@ -36,20 +32,20 @@
 			
 			protected function showdata(event:ResultEvent):void
 			{
-				chanelData.dataProvider = ArrayCollection(event.result);
+				productData.dataProvider = ArrayCollection(event.result);
 				/*Alert.show(event.result as String);*/
 			}
 			
 			private function updateResult(event:ResultEvent):void
 			{
-				chanelData.dataProvider = ArrayCollection(event.result);
+				productData.dataProvider = ArrayCollection(event.result);
 			}
 			
 			private function deleteResult(event:ResultEvent):void
 			{
-				chanelData.dataProvider = ArrayCollection(event.result);
+				productData.dataProvider = ArrayCollection(event.result);
 			}
-				
+			
 			protected function agent_faultHandler(event:FaultEvent):void
 			{
 				Alert.show("失败信:"+event.message.toString());
@@ -67,12 +63,12 @@
 				{
 					return;
 				}  
-				service.Update(chanelData.selectedItem as ChanelVO);
+				service.Update(productData.selectedItem as ChanelVO);
 			}
 			
 			public function deleteHandler():void
 			{
-				service.Delete(chanelData.selectedItem as ChanelVO);
+				service.Delete(productData.selectedItem as ChanelVO);
 			}
 			
 			public function openChanneCreate():void
@@ -84,6 +80,10 @@
 			}
 		]]>
 	</fx:Script>
+
+	<s:layout>
+		<s:VerticalLayout/>
+	</s:layout>
 	
 	<s:Group>
 		<s:layout>
@@ -99,14 +99,19 @@
 		<s:layout>
 			<s:HorizontalLayout/>
 		</s:layout>
-		<mx:AdvancedDataGrid id="chanelData" height="400" editable="true" itemEditEnd="updateHandler(event)">
+		<mx:AdvancedDataGrid id="productData" height="400" editable="true" itemEditEnd="updateHandler(event)">
 			<mx:columns>
 				<mx:AdvancedDataGridColumn headerText="ID" width="200" dataField="id" editable="false" />
-				<mx:AdvancedDataGridColumn headerText="Req" dataField="req" />
-				<mx:AdvancedDataGridColumn headerText="Name" dataField="name" />
-				<mx:AdvancedDataGridColumn headerText="Action" dataField="action" />
+				<mx:AdvancedDataGridColumn headerText="name" dataField="name"  editable="false" />
+				<mx:AdvancedDataGridColumn headerText="price1" dataField="{price.price1}" editable="false"  />
+				<mx:AdvancedDataGridColumn headerText="price2" dataField="price.price2" editable="false"  />
+				<mx:AdvancedDataGridColumn headerText="price3" dataField="price.price3" editable="false"  />
+				<mx:AdvancedDataGridColumn headerText="imageview" dataField="imageview" editable="false"  />
+				<mx:AdvancedDataGridColumn headerText="descripe1" dataField="action"  editable="false" />
+				<mx:AdvancedDataGridColumn headerText="descripe2" dataField="action" editable="false"  />
+				<mx:AdvancedDataGridColumn headerText="descripe3" dataField="action"  editable="false" />
+				<mx:AdvancedDataGridColumn headerText="descripe4" dataField="action"  editable="false" />
 			</mx:columns>
 		</mx:AdvancedDataGrid>
 	</s:Group>
-	
 </s:Panel>
