@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <s:Panel xmlns:fx="http://ns.adobe.com/mxml/2009" 
 		  xmlns:s="library://ns.adobe.com/flex/spark" 
-		  xmlns:mx="library://ns.adobe.com/flex/mx" width="1000" height="700" creationComplete="pageLoad()">
+		  xmlns:mx="library://ns.adobe.com/flex/mx" width="1100" height="700" creationComplete="pageLoad()">
 	<fx:Declarations>
 		<!-- 非ビジュアルエレメント (サービス、値オブジェクトなど) をここに配置 -->
 		<!--		<mx:RemoteObject id="service" destination="ChanelService"
@@ -21,6 +21,7 @@
 			import mx.collections.ArrayCollection;
 			import mx.controls.Alert;
 			import mx.events.AdvancedDataGridEvent;
+			import mx.formatters.DateFormatter;
 			import mx.managers.PopUpManager;
 			import mx.rpc.events.FaultEvent;
 			import mx.rpc.events.ResultEvent;
@@ -71,12 +72,11 @@
 				service.Delete(productData.selectedItem as ChanelVO);
 			}
 			
-			public function openChanneCreate():void
+			public function openProductCreate():void
 			{
-				var channelCreate:W_Chanel_Create = new W_Chanel_Create()
-				channelCreate.owner = this
-				PopUpManager.addPopUp(channelCreate, this, true);
-				PopUpManager.centerPopUp(channelCreate)
+				var productCreate:W_Product_Create = new W_Product_Create()
+				PopUpManager.addPopUp(productCreate, this, true);
+				PopUpManager.centerPopUp(productCreate)
 			}
 		]]>
 	</fx:Script>
@@ -92,25 +92,69 @@
 		<mx:Button id="btnClose"  label="关闭页面" click="btnClose_clickHandler()" />
 		<mx:Button id="btnUpdate"  label="刷新页面" click="pageLoad()" />
 		<mx:Button id="btnRemove"  label="删除选中" click="deleteHandler()" />
-		<mx:Button id="btnAdd"  label="追加记录" click="openChanneCreate()" />
+		<mx:Button id="btnUpdatew"  label="更新选中"  />
+		<mx:Button id="btnAdd"  label="追加记录" click="openProductCreate()" />
 	</s:Group>
 	
 	<s:Group>
 		<s:layout>
 			<s:HorizontalLayout/>
 		</s:layout>
-		<mx:AdvancedDataGrid id="productData" height="400" editable="true" itemEditEnd="updateHandler(event)">
+		<mx:AdvancedDataGrid id="productData" height="400" editable="false" itemEditEnd="updateHandler(event)">
 			<mx:columns>
-				<mx:AdvancedDataGridColumn headerText="ID" width="200" dataField="id" editable="false" />
-				<mx:AdvancedDataGridColumn headerText="name" dataField="name"  editable="false" />
-				<mx:AdvancedDataGridColumn headerText="price1" dataField="{price.price1}" editable="false"  />
-				<mx:AdvancedDataGridColumn headerText="price2" dataField="price.price2" editable="false"  />
-				<mx:AdvancedDataGridColumn headerText="price3" dataField="price.price3" editable="false"  />
-				<mx:AdvancedDataGridColumn headerText="imageview" dataField="imageview" editable="false"  />
-				<mx:AdvancedDataGridColumn headerText="descripe1" dataField="action"  editable="false" />
-				<mx:AdvancedDataGridColumn headerText="descripe2" dataField="action" editable="false"  />
-				<mx:AdvancedDataGridColumn headerText="descripe3" dataField="action"  editable="false" />
-				<mx:AdvancedDataGridColumn headerText="descripe4" dataField="action"  editable="false" />
+				<mx:AdvancedDataGridColumn headerText="ID" width="200" dataField="id" />
+				<mx:AdvancedDataGridColumn headerText="name" dataField="name" />
+				<mx:AdvancedDataGridColumn headerText="price1">
+					<mx:itemRenderer>  
+						<fx:Component> 
+							<mx:Label text="{data.price.price1}"/>  
+						</fx:Component>  
+					</mx:itemRenderer>  
+				</mx:AdvancedDataGridColumn>
+				<mx:AdvancedDataGridColumn headerText="price2" dataField="price" >
+					<mx:itemRenderer>  
+						<fx:Component> 
+							<mx:Label text="{data.price.price2}"/>  
+						</fx:Component>  
+					</mx:itemRenderer>  
+				</mx:AdvancedDataGridColumn>
+				
+				<mx:AdvancedDataGridColumn headerText="price3" dataField="price.price3">
+					<mx:itemRenderer>  
+						<fx:Component> 
+							<mx:Label text="{data.price.price3}"/>  
+						</fx:Component>  
+					</mx:itemRenderer>  
+				</mx:AdvancedDataGridColumn>
+				<mx:AdvancedDataGridColumn headerText="imageview" dataField="imageview" />
+				<mx:AdvancedDataGridColumn headerText="descripe1" dataField="action"  >
+					<mx:itemRenderer>  
+						<fx:Component> 
+							<mx:Label text="{data.descripe1.chInfo}"/>  
+						</fx:Component>  
+					</mx:itemRenderer>  
+				</mx:AdvancedDataGridColumn>
+				<mx:AdvancedDataGridColumn headerText="descripe2" dataField="action" >
+					<mx:itemRenderer>  
+						<fx:Component> 
+							<mx:Label text="{data.descripe2.chInfo}"/>  
+						</fx:Component>  
+					</mx:itemRenderer>  
+				</mx:AdvancedDataGridColumn>
+				<mx:AdvancedDataGridColumn headerText="descripe3" dataField="action" >
+					<mx:itemRenderer>  
+						<fx:Component> 
+							<mx:Label text="{data.descripe3.chInfo}"/>  
+						</fx:Component>  
+					</mx:itemRenderer>  
+				</mx:AdvancedDataGridColumn>
+				<mx:AdvancedDataGridColumn headerText="descripe4" dataField="action"  >
+					<mx:itemRenderer>  
+						<fx:Component> 
+							<mx:Label text="{data.descripe4.chInfo}"/>  
+						</fx:Component>  
+					</mx:itemRenderer>  
+				</mx:AdvancedDataGridColumn>
 			</mx:columns>
 		</mx:AdvancedDataGrid>
 	</s:Group>

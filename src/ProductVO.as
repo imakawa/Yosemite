@@ -9,6 +9,10 @@ package
 		
 		public var id:String;
 		
+		public var chanelId:String;
+
+		public var code:String;
+		
 		public var name:String;
 		
 		public var descripe1:CommentInfo;
@@ -24,6 +28,8 @@ package
 		public var imageView:String;
 		
 		public var images:ArrayCollection;
+		
+		public var imagesJson:String;
 		
 		public var shippingCode:String;
 		

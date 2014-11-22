@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Panel xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		 xmlns:s="library://ns.adobe.com/flex/spark" 
+		 xmlns:mx="library://ns.adobe.com/flex/mx" width="1000" height="700">
+	<fx:Declarations>
+		<!-- 非ビジュアルエレメント (サービス、値オブジェクトなど) をここに配置 -->
+		<!--		<mx:RemoteObject id="service" destination="ChanelService"
+		result="agent_resultHandler(event)"
+		fault="agent_faultHandler(event)">
+		</mx:RemoteObject>-->
+		
+		<mx:RemoteObject id="service" destination="ProductService" fault="{agent_faultHandler(event);}">
+			<mx:method name="Create" result="{btnClose_clickHandler();}"/>
+		</mx:RemoteObject>
+	</fx:Declarations>
+	
+	
+	<fx:Script>
+		<![CDATA[
+			import mx.collections.ArrayCollection;
+			import mx.controls.Alert;
+			import mx.events.AdvancedDataGridEvent;
+			import mx.formatters.DateFormatter;
+			import mx.managers.PopUpManager;
+			import mx.rpc.events.FaultEvent;
+			import mx.rpc.events.ResultEvent;
+
+			protected function agent_faultHandler(event:FaultEvent):void
+			{
+				Alert.show("失败信:"+event.message.toString());
+			}
+			
+			protected function btnClose_clickHandler():void
+			{
+				PopUpManager.removePopUp(this);
+			}
+			
+			protected function btnCreate_clickHandler():void
+			{
+				var productDo:ProductVO=new ProductVO();
+				
+				productDo.chanelId = this.chanelId.selectedItem;
+				
+				var dateFormatter:DateFormatter = new DateFormatter();
+				dateFormatter.formatString = "YYMM-DDJJ-NNSS";
+				productDo.code = dateFormatter.format(new Date());
+				
+				productDo.name= this.productName.text;
+				
+				var descripe1:CommentInfo= new CommentInfo();
+				descripe1.chInfo= this.des.text
+				var descripe2:CommentInfo= new CommentInfo();
+				descripe2.chInfo= this.des1.text
+				var descripe3:CommentInfo= new CommentInfo();
+				descripe3.chInfo= this.des2.text
+				var descripe4:CommentInfo= new CommentInfo();
+				descripe4.chInfo= this.des3.text
+				productDo.descripe1=descripe1
+				productDo.descripe2=descripe2
+				productDo.descripe3=descripe3
+				productDo.descripe4=descripe4
+					
+				var priceInfo:PriceInfo=new PriceInfo();
+				priceInfo.price1= this.price1.text;
+				priceInfo.price2= this.price2.text;
+				priceInfo.price3= this.price3.text;
+				priceInfo.price4= this.price4.text;
+				priceInfo.price5= this.price5.text;
+				productDo.price = priceInfo;
+				
+				productDo.imageView= this.imageView.text;
+				
+				var arr:Array=this.images.text.split(";");
+				productDo.images = arr;
+				
+				var json:String="";
+				for(var i:int = 0; i < arr.length; i++) { 
+					if(array[i] == match) { 
+						trace("Element with index " + i + " found to match " + match); 
+						//输出: Element with index 1 found to match b 
+						break; 
+					} 
+				} 
+				
+				productDo.shippingCode = this.shippingId.selectedItem
+				
+				productDo.weightInfo = this.weight.text;
+				
+				if(this.inStock1.selected){
+					productDo.isInStock="1"
+				}else{
+					productDo.isInStock="0"
+				}
+				service.Create(productDo);
+			}
+		]]>
+	</fx:Script>
+	
+	<s:layout>
+		<s:VerticalLayout/>
+	</s:layout>
+	
+	<mx:Button id="btnClose"  label="关闭页面" click="btnClose_clickHandler()" />
+	
+	<mx:HRule width="100%"/>
+	<s:Group>
+		<s:layout>
+			<s:HorizontalLayout/>
+		</s:layout>
+		<s:Label textAlign="center" text="所属菜单: "/>
+		<s:DropDownList id="chanelId"/>
+		<s:Label textAlign="center" text="产品名称: "/> 
+		<s:TextInput id="productName" width="200"/>
+	</s:Group>
+	<mx:HRule width="100%"/>
+	
+	<s:Group>
+		<s:layout>
+			<s:HorizontalLayout/>
+		</s:layout>
+		<s:Label textAlign="center" text="购入店铺: "/>
+		<s:DropDownList id="shippingId"/>
+		<s:Label textAlign="center" text="重量(kg): "/> 
+		<s:TextInput id="weight" width="200"/>
+		<s:Label textAlign="center" text="在库？: "/> 
+		<s:RadioButton groupName="myRadioButtonGroup" id="inStock1" label="是"/>
+		<s:RadioButton groupName="myRadioButtonGroup" id="inStock2" label="否" selected="true"/>
+	</s:Group>
+	<mx:HRule width="100%"/>
+	
+	<s:Group>
+		<s:layout>
+			<s:HorizontalLayout/>
+		</s:layout>
+		<s:Label text="价格1: "/> 
+		<s:TextInput id="price1" width="120"/>
+		<s:Label text="价格2: "/> 
+		<s:TextInput id="price2" width="120"/>
+		<s:Label text="价格3: "/> 
+		<s:TextInput id="price3" width="120"/>
+		<s:Label text="价格4: "/> 
+		<s:TextInput id="price4" width="120"/>
+		<s:Label text="价格5: "/> 
+		<s:TextInput id="price5" width="120"/>
+	</s:Group>
+	<mx:HRule width="100%"/>
+	
+	<s:Group>
+		<s:layout>
+			<s:HorizontalLayout/>
+		</s:layout>
+		<s:Label text="Menu中显示的图片: "/> 
+		<s:TextInput id="imageView" width="200"/>
+		<s:Label text="展示的图片（用冒号隔开）: "/> 
+		<s:TextArea id="images" width="200"/>
+	</s:Group>
+	<mx:HRule width="100%"/>
+	<s:Group>
+		<s:layout>
+			<s:HorizontalLayout/>
+		</s:layout>
+		
+		<s:Group>
+			<s:layout>
+				<s:VerticalLayout/>
+			</s:layout>
+			<s:Label text="产品简述: "/> 
+			<s:TextArea id="des" width="230"/>
+		</s:Group>
+		
+		<s:Group>
+			<s:layout>
+				<s:VerticalLayout/>
+			</s:layout>
+			<s:Label text="产品描述1: "/> 
+			<s:TextArea id="des1" width="230"/>
+		</s:Group>
+		<s:Group>
+			<s:layout>
+				<s:VerticalLayout/>
+			</s:layout>
+			<s:Label text="产品描述2: "/> 
+			<s:TextArea id="des2" width="230"/>
+		</s:Group>
+		<s:Group>
+			<s:layout>
+				<s:VerticalLayout/>
+			</s:layout>
+			<s:Label text="产品描述3: "/> 
+			<s:TextArea id="des3" width="230"/>
+		</s:Group>
+	</s:Group>
+	<mx:HRule width="100%"/>
+	<mx:Button id="btnCreate"  label="追加到数据库" click="btnCreate_clickHandler()" />
+</s:Panel>

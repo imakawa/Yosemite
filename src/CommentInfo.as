@@ -6,8 +6,8 @@ package
 	public class CommentInfo
 	{
 		
-		public String chInfo;
-		public String jpInfo;
+		public var chInfo:String;
+		public var jpInfo:String;
 		
 		public function CommentInfo()
 		{

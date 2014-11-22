@@ -78,7 +78,6 @@
 			public function openChanneCreate():void
 			{
 				var channelCreate:W_Chanel_Create = new W_Chanel_Create()
-				channelCreate.owner = this
 				PopUpManager.addPopUp(channelCreate, this, true);
 				PopUpManager.centerPopUp(channelCreate)
 			}

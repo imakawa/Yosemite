@@ -4,7 +4,7 @@
 			   xmlns:mx="library://ns.adobe.com/flex/mx" minWidth="955"
 			   minHeight="600">
 	<s:layout>
-		<s:VerticalLayout horizontalAlign="center" paddingTop="100"/>
+		<s:HorizontalLayout verticalAlign="middle" horizontalAlign="center" />
 	</s:layout>
 	<fx:Script>
 		<![CDATA[
@@ -52,7 +52,7 @@
 		</mx:RemoteObject>
 	</fx:Declarations>
 	
-	<s:Panel x="50" y="50" width="250" height="200" title="MasterDataManagement">
+	<s:Panel width="250" height="200" title="">
 		<s:layout>
 			<s:VerticalLayout horizontalAlign="center" paddingTop="20"/>
 		</s:layout>
@@ -60,6 +60,13 @@
 		<s:Button id="btn1"  label="商品管理" click="openProductManagement()"/>
 		<s:Button id="btn2"  label="首页展示商品管理" click="openChannelManagement()"/>
 		<s:Button id="btn3"  label="首页人气商品管理" click="openChannelManagement()"/>
+	</s:Panel>
+	
+	<s:Panel width="250" height="200" title="">
+		<s:layout>
+			<s:VerticalLayout horizontalAlign="center" paddingTop="20"/>
+		</s:layout>
+		<s:Button id="btn4"  label="购入店铺管理" click="openChannelManagement()"/>
 		
 	</s:Panel>
 	

@@ -6,9 +6,11 @@ package
 	public class PriceInfo
 	{
 		
-		public String price1;
-		public String price2;
-		public String price3;
+		public var price1:String;
+		public var price2:String;
+		public var price3:String;
+		public var price4:String;
+		public var price5:String;
 		
 		public function PriceInfo()
 		{
