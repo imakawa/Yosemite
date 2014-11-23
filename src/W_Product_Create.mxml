@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <s:Panel xmlns:fx="http://ns.adobe.com/mxml/2009" 
 		 xmlns:s="library://ns.adobe.com/flex/spark" 
-		 xmlns:mx="library://ns.adobe.com/flex/mx" width="1000" height="700">
+		 xmlns:mx="library://ns.adobe.com/flex/mx" width="1000" height="700" creationComplete="pageLoad()">
 	<fx:Declarations>
 		<!-- 非ビジュアルエレメント (サービス、値オブジェクトなど) をここに配置 -->
 		<!--		<mx:RemoteObject id="service" destination="ChanelService"
@@ -12,6 +12,11 @@
 		<mx:RemoteObject id="service" destination="ProductService" fault="{agent_faultHandler(event);}">
 			<mx:method name="Create" result="{btnClose_clickHandler();}"/>
 		</mx:RemoteObject>
+		
+		<mx:RemoteObject id="chanelService" destination="ChanelService" fault="{agent_faultHandler(event);}">
+			<mx:method name="Read" result="{showdata(event);}"/>
+		</mx:RemoteObject>
+
 	</fx:Declarations>
 	
 	
@@ -24,6 +29,16 @@
 			import mx.managers.PopUpManager;
 			import mx.rpc.events.FaultEvent;
 			import mx.rpc.events.ResultEvent;
+
+			protected function pageLoad(){
+				chanelService.Read();
+			}
+			
+			protected function showdata(event:ResultEvent):void
+			{
+			 this.chanelId.dataProvider = ArrayCollection(event.result);
+				/*Alert.show(event.result as String);*/
+			}
 
 			protected function agent_faultHandler(event:FaultEvent):void
 			{
@@ -39,7 +54,8 @@
 			{
 				var productDo:ProductVO=new ProductVO();
 				
-				productDo.chanelId = this.chanelId.selectedItem;
+				var selectedChanel:ChanelVO =this.chanelId.selectedItem; 
+				productDo.chanelId = selectedChanel.id;
 				
 				var dateFormatter:DateFormatter = new DateFormatter();
 				dateFormatter.formatString = "YYMM-DDJJ-NNSS";
@@ -74,13 +90,13 @@
 				productDo.images = arr;
 				
 				var json:String="";
-				for(var i:int = 0; i < arr.length; i++) { 
+/*				for(var i:int = 0; i < arr.length; i++) { 
 					if(array[i] == match) { 
 						trace("Element with index " + i + " found to match " + match); 
 						//输出: Element with index 1 found to match b 
 						break; 
 					} 
-				} 
+				} */
 				
 				productDo.shippingCode = this.shippingId.selectedItem
 				
@@ -108,7 +124,7 @@
 			<s:HorizontalLayout/>
 		</s:layout>
 		<s:Label textAlign="center" text="所属菜单: "/>
-		<s:DropDownList id="chanelId"/>
+		<s:DropDownList id="chanelId" labelField="name" selectedIndex="1" />
 		<s:Label textAlign="center" text="产品名称: "/> 
 		<s:TextInput id="productName" width="200"/>
 	</s:Group>
@@ -152,7 +168,7 @@
 		<s:Label text="Menu中显示的图片: "/> 
 		<s:TextInput id="imageView" width="200"/>
 		<s:Label text="展示的图片（用冒号隔开）: "/> 
-		<s:TextArea id="images" width="200"/>
+		<s:TextArea id="images" width="400" height="100"/>
 	</s:Group>
 	<mx:HRule width="100%"/>
 	<s:Group>

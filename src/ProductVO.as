@@ -27,7 +27,7 @@ package
 		
 		public var imageView:String;
 		
-		public var images:ArrayCollection;
+		public var images:Array;
 		
 		public var imagesJson:String;
 		

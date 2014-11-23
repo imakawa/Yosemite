@@ -126,7 +126,7 @@
 						</fx:Component>  
 					</mx:itemRenderer>  
 				</mx:AdvancedDataGridColumn>
-				<mx:AdvancedDataGridColumn headerText="imageview" dataField="imageview" />
+				<mx:AdvancedDataGridColumn headerText="imageview" dataField="imageView" />
 				<mx:AdvancedDataGridColumn headerText="descripe1" dataField="action"  >
 					<mx:itemRenderer>  
 						<fx:Component> 
