@@ -1,8 +1,107 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:Panel xmlns:fx="http://ns.adobe.com/mxml/2009" 
+<s:Panel xmlns:fx="http://ns.adobe.com/mxml/2009" 
 		  xmlns:s="library://ns.adobe.com/flex/spark" 
-		  xmlns:mx="library://ns.adobe.com/flex/mx" layout="absolute" width="1000" height="700">
+		  xmlns:mx="library://ns.adobe.com/flex/mx" width="1000" height="700" creationComplete="pageLoad()">
+	<s:layout>
+		<s:VerticalLayout/>
+	</s:layout>
 	<fx:Declarations>
 		<!-- 非ビジュアルエレメント (サービス、値オブジェクトなど) をここに配置 -->
+		<!--		<mx:RemoteObject id="service" destination="ChanelService"
+		result="agent_resultHandler(event)"
+		fault="agent_faultHandler(event)">
+		</mx:RemoteObject>-->
+		
+		<mx:RemoteObject id="shippingService" destination="ShippingService" fault="{agent_faultHandler(event);}">
+			<mx:method name="Read" result="{showdata(event);}"/>
+			<mx:method name="Update" result="{updateResult(event);}"/>
+			<mx:method name="Delete" result="{showdata(event);}"/>
+		</mx:RemoteObject>
 	</fx:Declarations>
-</mx:Panel>
+	
+	<fx:Script>
+		<![CDATA[
+			import mx.collections.ArrayCollection;
+			import mx.controls.Alert;
+			import mx.events.AdvancedDataGridEvent;
+			import mx.managers.PopUpManager;
+			import mx.rpc.events.FaultEvent;
+			import mx.rpc.events.ResultEvent;
+			
+			protected function pageLoad():void
+			{
+				shippingService.Read();
+			}
+			
+			protected function showdata(event:ResultEvent):void
+			{
+				ShippingData.dataProvider = ArrayCollection(event.result);
+			}
+			
+			private function updateResult(event:ResultEvent):void
+			{
+				ShippingData.dataProvider = ArrayCollection(event.result);
+			}
+			
+			private function deleteResult(event:ResultEvent):void
+			{
+				ShippingData.dataProvider = ArrayCollection(event.result);
+			}
+			
+			protected function agent_faultHandler(event:FaultEvent):void
+			{
+				Alert.show("失败信:"+event.message.toString());
+			}
+			
+			protected function btnClose_clickHandler():void
+			{
+				PopUpManager.removePopUp(this);
+			}
+			
+			public function updateHandler(event:AdvancedDataGridEvent):void
+			{
+				//取消的话不更新
+				if(event.reason == "cancelled")
+				{
+					return;
+				}  
+				shippingService.Update(ShippingData.selectedItem as Shipping);
+			}
+			
+			public function deleteHandler():void
+			{
+				shippingService.Delete(ShippingData.selectedItem as Shipping);
+			}
+			
+			public function openChanneCreate():void
+			{
+				var shippingCreate:W_Shipping_Create = new W_Shipping_Create();
+				PopUpManager.addPopUp(shippingCreate,this,true);
+				PopUpManager.centerPopUp(shippingCreate)
+			}
+		]]>
+	</fx:Script>
+	
+	<s:Group>
+		<s:layout>
+			<s:HorizontalLayout/>
+		</s:layout>
+		<mx:Button id="btnClose"  label="关闭页面" click="btnClose_clickHandler()" />
+		<mx:Button id="btnUpdate"  label="刷新页面" click="pageLoad()" />
+		<mx:Button id="btnRemove"  label="删除选中" click="deleteHandler()" />
+		<mx:Button id="btnAdd"  label="追加记录" click="openChanneCreate()" />
+	</s:Group>
+	
+	<s:Group>
+		<s:layout>
+			<s:HorizontalLayout/>
+		</s:layout>
+		<mx:AdvancedDataGrid id="ShippingData" height="400" editable="true" itemEditEnd="updateHandler(event)">
+			<mx:columns>
+				<mx:AdvancedDataGridColumn headerText="ID" width="200" dataField="id" editable="false" />
+				<mx:AdvancedDataGridColumn headerText="商店名称" width="350" dataField="name" />
+				<mx:AdvancedDataGridColumn headerText="商店地址" width="350" dataField="address" />
+			</mx:columns>
+		</mx:AdvancedDataGrid>
+	</s:Group>
+</s:Panel>

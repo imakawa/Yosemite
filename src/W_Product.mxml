@@ -57,26 +57,26 @@
 				PopUpManager.removePopUp(this);
 			}
 			
-			public function updateHandler(event:AdvancedDataGridEvent):void
+			public function updateHandler():void
 			{
-				//取消的话不更新
-				if(event.reason == "cancelled")
-				{
+				if(this.productData.selectedItem==null){
 					return;
-				}  
-				service.Update(productData.selectedItem as ChanelVO);
-			}
+				}
+				var productUpdate:W_Product_Update = new W_Product_Update();
+				PopUpManager.addPopUp(productUpdate, this, true);
+				PopUpManager.centerPopUp(productUpdate);
+		    }
 			
 			public function deleteHandler():void
 			{
-				service.Delete(productData.selectedItem as ChanelVO);
+				service.Delete(productData.selectedItem as ProductVO);
 			}
 			
 			public function openProductCreate():void
 			{
-				var productCreate:W_Product_Create = new W_Product_Create()
+				var productCreate:W_Product_Create = new W_Product_Create();
 				PopUpManager.addPopUp(productCreate, this, true);
-				PopUpManager.centerPopUp(productCreate)
+				PopUpManager.centerPopUp(productCreate);
 			}
 		]]>
 	</fx:Script>
@@ -92,7 +92,7 @@
 		<mx:Button id="btnClose"  label="关闭页面" click="btnClose_clickHandler()" />
 		<mx:Button id="btnUpdate"  label="刷新页面" click="pageLoad()" />
 		<mx:Button id="btnRemove"  label="删除选中" click="deleteHandler()" />
-		<mx:Button id="btnUpdatew"  label="更新选中"  />
+		<mx:Button id="btnUpdatew"  label="查看选中"  click="updateHandler()"/>
 		<mx:Button id="btnAdd"  label="追加记录" click="openProductCreate()" />
 	</s:Group>
 	
@@ -100,7 +100,7 @@
 		<s:layout>
 			<s:HorizontalLayout/>
 		</s:layout>
-		<mx:AdvancedDataGrid id="productData" height="400" editable="false" itemEditEnd="updateHandler(event)">
+		<mx:AdvancedDataGrid id="productData" height="400" editable="false">
 			<mx:columns>
 				<mx:AdvancedDataGridColumn headerText="ID" width="200" dataField="id" />
 				<mx:AdvancedDataGridColumn headerText="name" dataField="name" />

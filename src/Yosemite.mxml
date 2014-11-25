@@ -13,6 +13,8 @@
 			import mx.rpc.events.FaultEvent;
 			import mx.rpc.events.ResultEvent;
 			
+			import Shipping.W_Shipping;
+			
 			protected function btnSend_clickHandler(event:MouseEvent):void
 			{
 			/*	agent.getInfo(txtSend.text);*/
@@ -41,6 +43,13 @@
 				PopUpManager.addPopUp(product, this, true);
 				PopUpManager.centerPopUp(product)
 			}
+			
+			public function openShippingManagement():void
+			{
+				var shipping:W_Shipping = new W_Shipping()
+				PopUpManager.addPopUp(shipping, this, true);
+				PopUpManager.centerPopUp(shipping)
+			}
 		]]>	
 	</fx:Script>
 	
@@ -66,8 +75,15 @@
 		<s:layout>
 			<s:VerticalLayout horizontalAlign="center" paddingTop="20"/>
 		</s:layout>
-		<s:Button id="btn4"  label="购入店铺管理" click="openChannelManagement()"/>
-		
+		<s:Button id="btn4"  label="购入店铺管理" click="openShippingManagement()"/>
+	</s:Panel>
+	
+	<s:Panel width="250" height="200" title="">
+		<s:layout>
+			<s:VerticalLayout horizontalAlign="center" paddingTop="20"/>
+		</s:layout>
+		<s:Button  label="Group管理" click="openShippingManagement()"/>
+		<s:Button  label="用户管理" click="openShippingManagement()"/>
 	</s:Panel>
 	
 </s:Application>

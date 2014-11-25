@@ -2,7 +2,13 @@
 <s:Panel xmlns:fx="http://ns.adobe.com/mxml/2009" 
 		 xmlns:s="library://ns.adobe.com/flex/spark" 
 		 xmlns:mx="library://ns.adobe.com/flex/mx" width="1000" height="700" creationComplete="pageLoad()">
-	<fx:Declarations>		
+	<fx:Declarations>
+		<!-- 非ビジュアルエレメント (サービス、値オブジェクトなど) をここに配置 -->
+		<!--		<mx:RemoteObject id="service" destination="ChanelService"
+		result="agent_resultHandler(event)"
+		fault="agent_faultHandler(event)">
+		</mx:RemoteObject>-->
+		
 		<mx:RemoteObject id="service" destination="ProductService" fault="{agent_faultHandler(event);}">
 			<mx:method name="Create" result="{btnClose_clickHandler();}"/>
 		</mx:RemoteObject>
@@ -10,23 +16,25 @@
 		<mx:RemoteObject id="chanelService" destination="ChanelService" fault="{agent_faultHandler(event);}">
 			<mx:method name="Read" result="{ShowChanelData(event);}"/>
 		</mx:RemoteObject>
-
+		
 		<mx:RemoteObject id="shippingService" destination="ShippingService" fault="{agent_faultHandler(event);}">
 			<mx:method name="Read" result="{ShowShippingData(event);}"/>
 		</mx:RemoteObject>
 	</fx:Declarations>
 	
+	
 	<fx:Script>
 		<![CDATA[
 			import mx.collections.ArrayCollection;
 			import mx.controls.Alert;
+			import mx.events.AdvancedDataGridEvent;
 			import mx.formatters.DateFormatter;
 			import mx.managers.PopUpManager;
 			import mx.rpc.events.FaultEvent;
 			import mx.rpc.events.ResultEvent;
 			
 			import Shipping.Shipping;
-
+			
 			protected function pageLoad(){
 				chanelService.Read();
 				shippingService.Read();
@@ -34,9 +42,9 @@
 			
 			protected function ShowChanelData(event:ResultEvent):void
 			{
-			 this.chanelId.dataProvider = ArrayCollection(event.result);
+				this.chanelId.dataProvider = ArrayCollection(event.result);
 			}
-
+			
 			protected function ShowShippingData(event:ResultEvent):void
 			{
 				this.shippingId.dataProvider = ArrayCollection(event.result);
@@ -77,7 +85,7 @@
 				productDo.descripe2=descripe2
 				productDo.descripe3=descripe3
 				productDo.descripe4=descripe4
-					
+				
 				var priceInfo:PriceInfo=new PriceInfo();
 				priceInfo.price1= this.price1.text;
 				priceInfo.price2= this.price2.text;

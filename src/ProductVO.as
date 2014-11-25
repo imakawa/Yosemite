@@ -1,7 +1,5 @@
 package
 {
-	import mx.collections.ArrayCollection;
-
 	[Bindable]
 	[RemoteClass(alias="model.Product")]
 	public class ProductVO
