@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <s:Panel xmlns:fx="http://ns.adobe.com/mxml/2009" 
 		 xmlns:s="library://ns.adobe.com/flex/spark" 
-		 xmlns:mx="library://ns.adobe.com/flex/mx" width="800" height="600"
-		 title="网站菜单管理" creationComplete="pageLoad()">
+		 xmlns:mx="library://ns.adobe.com/flex/mx" width="800" height="600" creationComplete="pageLoad()">
 	<s:layout>
 		<s:VerticalLayout/>
 	</s:layout>
 	<fx:Declarations>		
-		<mx:RemoteObject id="service" destination="ChanelService" fault="{agent_faultHandler(event);}">
+		<mx:RemoteObject id="groupService" destination="GroupService" fault="{agent_faultHandler(event);}">
 			<mx:method name="Read" result="{showdata(event);}"/>
 			<mx:method name="Update" result="{updateResult(event);}"/>
 			<mx:method name="Delete" result="{showdata(event);}"/>
@@ -25,25 +24,24 @@
 			
 			protected function pageLoad():void
 			{
-				service.Read();
+				groupService.Read();
 			}
 			
 			protected function showdata(event:ResultEvent):void
 			{
-				chanelData.dataProvider = ArrayCollection(event.result);
-				/*Alert.show(event.result as String);*/
+				groupData.dataProvider = ArrayCollection(event.result);
 			}
 			
 			private function updateResult(event:ResultEvent):void
 			{
-				chanelData.dataProvider = ArrayCollection(event.result);
+				groupData.dataProvider = ArrayCollection(event.result);
 			}
 			
 			private function deleteResult(event:ResultEvent):void
 			{
-				chanelData.dataProvider = ArrayCollection(event.result);
+				groupData.dataProvider = ArrayCollection(event.result);
 			}
-				
+			
 			protected function agent_faultHandler(event:FaultEvent):void
 			{
 				Alert.show("失败信:"+event.message.toString());
@@ -61,19 +59,19 @@
 				{
 					return;
 				}  
-				service.Update(chanelData.selectedItem as ChanelVO);
+				groupService.Update(groupData.selectedItem as Group.Group);
 			}
 			
 			public function deleteHandler():void
 			{
-				service.Delete(chanelData.selectedItem as ChanelVO);
+				groupService.Delete(groupData.selectedItem as Group.Group);
 			}
 			
 			public function openChanneCreate():void
 			{
-				var channelCreate:W_Chanel_Create = new W_Chanel_Create()
-				PopUpManager.addPopUp(channelCreate, this, true);
-				PopUpManager.centerPopUp(channelCreate)
+				var groupCreate:W_Group_Create = new W_Group_Create()
+				PopUpManager.addPopUp(groupCreate, this, true);
+				PopUpManager.centerPopUp(groupCreate)
 			}
 		]]>
 	</fx:Script>
@@ -92,14 +90,13 @@
 		<s:layout>
 			<s:HorizontalLayout/>
 		</s:layout>
-		<mx:AdvancedDataGrid id="chanelData" height="400" editable="true" itemEditEnd="updateHandler(event)">
+		<mx:AdvancedDataGrid id="groupData" height="400" editable="true" itemEditEnd="updateHandler(event)">
 			<mx:columns>
 				<mx:AdvancedDataGridColumn headerText="ID" width="200" dataField="id" editable="false" />
-				<mx:AdvancedDataGridColumn headerText="Req" dataField="req" />
+				<mx:AdvancedDataGridColumn headerText="Code" dataField="code" editable="false"/>
 				<mx:AdvancedDataGridColumn headerText="Name" dataField="name" />
-				<mx:AdvancedDataGridColumn headerText="Action" dataField="action" />
+				<mx:AdvancedDataGridColumn headerText="描述" dataField="descripe" />
 			</mx:columns>
 		</mx:AdvancedDataGrid>
 	</s:Group>
-	
 </s:Panel>

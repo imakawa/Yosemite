@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <s:Panel xmlns:fx="http://ns.adobe.com/mxml/2009" 
 		 xmlns:s="library://ns.adobe.com/flex/spark" 
-		 xmlns:mx="library://ns.adobe.com/flex/mx" width="800" height="600"
-		 title="网站菜单管理" creationComplete="pageLoad()">
+		 xmlns:mx="library://ns.adobe.com/flex/mx" width="800" height="600" creationComplete="pageLoad()">
 	<s:layout>
 		<s:VerticalLayout/>
 	</s:layout>
 	<fx:Declarations>		
-		<mx:RemoteObject id="service" destination="ChanelService" fault="{agent_faultHandler(event);}">
+		<mx:RemoteObject id="userService" destination="UserService" fault="{agent_faultHandler(event);}">
 			<mx:method name="Read" result="{showdata(event);}"/>
 			<mx:method name="Update" result="{updateResult(event);}"/>
 			<mx:method name="Delete" result="{showdata(event);}"/>
@@ -25,25 +24,24 @@
 			
 			protected function pageLoad():void
 			{
-				service.Read();
+				userService.Read();
 			}
 			
 			protected function showdata(event:ResultEvent):void
 			{
-				chanelData.dataProvider = ArrayCollection(event.result);
-				/*Alert.show(event.result as String);*/
+				userData.dataProvider = ArrayCollection(event.result);
 			}
 			
 			private function updateResult(event:ResultEvent):void
 			{
-				chanelData.dataProvider = ArrayCollection(event.result);
+				userData.dataProvider = ArrayCollection(event.result);
 			}
 			
 			private function deleteResult(event:ResultEvent):void
 			{
-				chanelData.dataProvider = ArrayCollection(event.result);
+				userData.dataProvider = ArrayCollection(event.result);
 			}
-				
+			
 			protected function agent_faultHandler(event:FaultEvent):void
 			{
 				Alert.show("失败信:"+event.message.toString());
@@ -61,19 +59,19 @@
 				{
 					return;
 				}  
-				service.Update(chanelData.selectedItem as ChanelVO);
+				userService.Update(userData.selectedItem as UserInfo);
 			}
 			
 			public function deleteHandler():void
 			{
-				service.Delete(chanelData.selectedItem as ChanelVO);
+				userService.Delete(userData.selectedItem as UserInfo);
 			}
 			
 			public function openChanneCreate():void
-			{
-				var channelCreate:W_Chanel_Create = new W_Chanel_Create()
-				PopUpManager.addPopUp(channelCreate, this, true);
-				PopUpManager.centerPopUp(channelCreate)
+			{	
+				var userCreate:W_User_Create = new W_User_Create();
+				PopUpManager.addPopUp(userCreate, this, true);
+				PopUpManager.centerPopUp(userCreate);
 			}
 		]]>
 	</fx:Script>
@@ -92,14 +90,14 @@
 		<s:layout>
 			<s:HorizontalLayout/>
 		</s:layout>
-		<mx:AdvancedDataGrid id="chanelData" height="400" editable="true" itemEditEnd="updateHandler(event)">
+		<mx:AdvancedDataGrid id="userData" height="400" editable="true" itemEditEnd="updateHandler(event)">
 			<mx:columns>
 				<mx:AdvancedDataGridColumn headerText="ID" width="200" dataField="id" editable="false" />
-				<mx:AdvancedDataGridColumn headerText="Req" dataField="req" />
-				<mx:AdvancedDataGridColumn headerText="Name" dataField="name" />
-				<mx:AdvancedDataGridColumn headerText="Action" dataField="action" />
+				<mx:AdvancedDataGridColumn headerText="用户名" dataField="username" />
+				<mx:AdvancedDataGridColumn headerText="密码" dataField="password" />
+				<mx:AdvancedDataGridColumn headerText="用户组" dataField="groupeCode" editable="false"/>
+				<mx:AdvancedDataGridColumn headerText="类型" dataField="type" />
 			</mx:columns>
 		</mx:AdvancedDataGrid>
 	</s:Group>
-	
 </s:Panel>

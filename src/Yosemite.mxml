@@ -12,8 +12,9 @@
 			import mx.managers.PopUpManager;
 			import mx.rpc.events.FaultEvent;
 			import mx.rpc.events.ResultEvent;
-			
+			import Group.W_Group;
 			import Shipping.W_Shipping;
+			import User.W_User;
 			
 			protected function btnSend_clickHandler(event:MouseEvent):void
 			{
@@ -50,6 +51,20 @@
 				PopUpManager.addPopUp(shipping, this, true);
 				PopUpManager.centerPopUp(shipping)
 			}
+			
+			public function openGroupManagement():void
+			{
+				var group:W_Group = new W_Group();
+				PopUpManager.addPopUp(group, this, true);
+				PopUpManager.centerPopUp(group);		
+			}
+			
+			public function openUserManagement():void
+			{
+				var user:W_User = new W_User();
+				PopUpManager.addPopUp(user, this, true);
+				PopUpManager.centerPopUp(user);		
+			}
 		]]>	
 	</fx:Script>
 	
@@ -82,8 +97,8 @@
 		<s:layout>
 			<s:VerticalLayout horizontalAlign="center" paddingTop="20"/>
 		</s:layout>
-		<s:Button  label="Group管理" click="openShippingManagement()"/>
-		<s:Button  label="用户管理" click="openShippingManagement()"/>
+		<s:Button  label="Group管理" click="openGroupManagement()"/>
+		<s:Button  label="用户管理" click="openUserManagement()"/>
 	</s:Panel>
-	
+
 </s:Application>

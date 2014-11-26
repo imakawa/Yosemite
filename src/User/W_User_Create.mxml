@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Panel xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		 xmlns:s="library://ns.adobe.com/flex/spark" 
+		 xmlns:mx="library://ns.adobe.com/flex/mx" width="400" height="300" creationComplete="pageLoad()">
+	<s:layout>
+		<s:VerticalLayout/>
+	</s:layout>
+	
+	<fx:Script>
+		<![CDATA[
+			import mx.collections.ArrayCollection;
+			import mx.controls.Alert;
+			import mx.managers.PopUpManager;
+			import mx.rpc.events.FaultEvent;
+			import mx.rpc.events.ResultEvent;
+			import Group.Group;
+			
+			private function pageLoad():void{
+				groupService.Read();
+			}
+			
+			protected function btnClose_clickHandler():void
+			{
+				PopUpManager.removePopUp(this);
+			}
+			protected function btnCreate_clickHandler():void
+			{	
+				var group:UserInfo = new UserInfo();
+				group.username = this.uname.text;
+				group.password = this.upassword.text;
+				var selectedGroup:Group.Group = this.ugroupcode.selectedItem as Group.Group
+				group.groupeCode = selectedGroup.code;
+				group.type = this.utype.selectedIndex as String;
+				userService.Create(group);
+			}
+			protected function agent_faultHandler(event:FaultEvent):void
+			{
+				Alert.show("失败信:"+event.message.toString());
+			}
+			
+			protected function showdata(event:ResultEvent):void
+			{
+				ugroupcode.dataProvider = ArrayCollection(event.result);
+			}
+		]]>
+	</fx:Script>
+	
+	<fx:Declarations>
+		<mx:RemoteObject id="userService" destination="UserService" fault="{agent_faultHandler(event);}">
+			<mx:method name="Create" result="{btnClose_clickHandler();}"/>
+		</mx:RemoteObject>
+		
+		<mx:RemoteObject id="groupService" destination="GroupService" fault="{agent_faultHandler(event);}">
+			<mx:method name="Read" result="{showdata(event);}"/>
+		</mx:RemoteObject>
+		
+		<s:ArrayList id="queryField">  
+			<fx:Object dataField="requestStatuId"  headerText="店主"/>  
+			<fx:Object dataField="executeName"  headerText="管理员"/>
+		</s:ArrayList>  
+	</fx:Declarations>
+	<mx:Button id="btnClose"  label="关闭页面" click="btnClose_clickHandler()" />
+	
+	<s:Group>
+		<s:layout>
+			<s:HorizontalLayout/>
+		</s:layout>
+		<s:Label text="用户名: "/> 
+		<s:TextInput id="uname" width="200"/>
+	</s:Group>
+	
+	<s:Group>
+		<s:layout>
+			<s:HorizontalLayout/>
+		</s:layout>
+		<s:Label text="密码:"/> 
+		<s:TextInput id="upassword" width="200"/>
+	</s:Group>
+	
+	<s:Group>
+		<s:layout>
+			<s:HorizontalLayout/>
+		</s:layout>
+		<s:Label text="用户组:"/>
+		<s:DropDownList id="ugroupcode" width="200" labelField="name" selectedIndex="0"/>
+	</s:Group>
+	
+	<s:Group>
+		<s:layout>
+			<s:HorizontalLayout/>
+		</s:layout>
+		<s:Label text="类型:"/> 
+		<s:DropDownList id="utype" width="200" dataProvider="{queryField}" labelField="headerText" selectedIndex="0"/>
+	</s:Group>
+	
+	<mx:Button id="btnCreate"  label="登録" click="btnCreate_clickHandler()" />
+</s:Panel>
