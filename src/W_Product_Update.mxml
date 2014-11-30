@@ -10,7 +10,7 @@
 		</mx:RemoteObject>-->
 		
 		<mx:RemoteObject id="service" destination="ProductService" fault="{agent_faultHandler(event);}">
-			<mx:method name="Create" result="{btnClose_clickHandler();}"/>
+			<mx:method name="Update" result="{btnClose_clickHandler();}"/>
 		</mx:RemoteObject>
 		
 		<mx:RemoteObject id="chanelService" destination="ChanelService" fault="{agent_faultHandler(event);}">
@@ -22,12 +22,10 @@
 		</mx:RemoteObject>
 	</fx:Declarations>
 	
-	
 	<fx:Script>
 		<![CDATA[
 			import mx.collections.ArrayCollection;
 			import mx.controls.Alert;
-			import mx.events.AdvancedDataGridEvent;
 			import mx.formatters.DateFormatter;
 			import mx.managers.PopUpManager;
 			import mx.rpc.events.FaultEvent;
@@ -35,14 +33,66 @@
 			
 			import Shipping.Shipping;
 			
-			protected function pageLoad(){
+			import User.UserInfo;
+			
+			protected function pageLoad():void{
 				chanelService.Read();
 				shippingService.Read();
+				
+				var wproduct:W_Product= this.owner as W_Product;
+				var selectedProduct:ProductVO = wproduct.productData.selectedItem as ProductVO;
+				
+				
+				/*this.chanelId.selectedItem.id = selectedProduct.chanelId;*/
+				
+				for(var i:int=0;i<this.chanelId.dataProvider;i++){
+					var chanel:ChanelVO= this.chanelId.dataProvider.getItemAt(i) as ChanelVO;
+					if(chanel.id==selectedProduct.chanelId){
+						this.chanelId.selectedItem =chanel;
+					}
+				}
+				
+				this.productName.text = selectedProduct.name;
+				this.productCode.text=selectedProduct.code;
+				this.weight.text= selectedProduct.weightInfo;
+				if(selectedProduct.isInStock=="1"){
+					this.inStock1.selected = true
+				}else{
+					this.inStock2.selected = true
+				}
+				
+				var priceInfo:PriceInfo=selectedProduct.price;
+				this.price1.text=priceInfo.price1;
+				this.price2.text=priceInfo.price2;
+				this.price3.text=priceInfo.price3;
+				this.price4.text=priceInfo.price4;
+				this.price5.text=priceInfo.price5;
+				
+				var descripe1:CommentInfo= selectedProduct.descripe1;
+			    this.des.text=descripe1.chInfo;
+				var descripe2:CommentInfo= selectedProduct.descripe2;
+				this.des1.text=descripe2.chInfo; 
+				var descripe3:CommentInfo= selectedProduct.descripe3;
+				this.des2.text=descripe3.chInfo; 
+				var descripe4:CommentInfo= selectedProduct.descripe4;
+				this.des3.text =descripe4.chInfo;
+				
+				this.imageView.text=selectedProduct.imageView;
+				
+				var imagesStr:String="";
+				for(var i:int=0;i<selectedProduct.images.length;i++){
+					var imageInfo:String = selectedProduct.images.getItemAt(i) as String;
+					imagesStr = imagesStr +imageInfo;
+					if(i!=selectedProduct.images.length-1){
+						imagesStr = imagesStr + ";";
+					}
+				}
+				this.images.text=imagesStr;
 			}
 			
 			protected function ShowChanelData(event:ResultEvent):void
 			{
-				this.chanelId.dataProvider = ArrayCollection(event.result);
+				this.chanelId.dataProvider =ArrayCollection(event.result); 
 			}
 			
 			protected function ShowShippingData(event:ResultEvent):void
@@ -64,12 +114,14 @@
 			{
 				var productDo:ProductVO=new ProductVO();
 				
+				var wproduct:W_Product= this.owner as W_Product;
+				var selecteProduct:ProductVO = wproduct.productData.selectedItem as ProductVO;
+				
+				productDo.id = selecteProduct.id;
 				var selectedChanel:ChanelVO =this.chanelId.selectedItem; 
 				productDo.chanelId = selectedChanel.id;
 				
-				var dateFormatter:DateFormatter = new DateFormatter();
-				dateFormatter.formatString = "YYMM-DDJJ-NNSS";
-				productDo.code = dateFormatter.format(new Date());
+				productDo.code=selectedChanel.code+this.productCode.text;
 				
 				productDo.name= this.productName.text;
 				
@@ -97,7 +149,8 @@
 				productDo.imageView= this.imageView.text;
 				
 				var arr:Array=this.images.text.split(";");
-				productDo.images = arr;
+				var imagesArr:ArrayCollection=new ArrayCollection(arr);
+				productDo.images = imagesArr;
 				
 				var selectedShipping:Shipping= this.shippingId.selectedItem;
 				productDo.shippingCode = selectedShipping.id;
@@ -109,7 +162,7 @@
 				}else{
 					productDo.isInStock="0"
 				}
-				service.Create(productDo);
+				service.Update(productDo);
 			}
 		]]>
 	</fx:Script>
@@ -129,6 +182,8 @@
 		<s:DropDownList id="chanelId" labelField="name"/>
 		<s:Label textAlign="center" text="产品名称: "/> 
 		<s:TextInput id="productName" width="200"/>
+		<s:Label textAlign="center" text="商品标示码: "/> 
+		<s:TextInput id="productCode" width="150"/>
 	</s:Group>
 	<mx:HRule width="100%"/>
 	
@@ -209,5 +264,5 @@
 		</s:Group>
 	</s:Group>
 	<mx:HRule width="100%"/>
-	<mx:Button id="btnCreate"  label="追加到数据库" click="btnCreate_clickHandler()" />
+	<mx:Button id="btnCreate"  label="更新到数据库" click="btnCreate_clickHandler()" />
 </s:Panel>

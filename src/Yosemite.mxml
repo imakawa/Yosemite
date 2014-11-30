@@ -2,7 +2,7 @@
 <s:Application xmlns:fx="http://ns.adobe.com/mxml/2009"
 			   xmlns:s="library://ns.adobe.com/flex/spark"
 			   xmlns:mx="library://ns.adobe.com/flex/mx" minWidth="955"
-			   minHeight="600">
+			   minHeight="600" creationComplete="pageLoad()">
 	<s:layout>
 		<s:HorizontalLayout verticalAlign="middle" horizontalAlign="center" />
 	</s:layout>
@@ -13,8 +13,16 @@
 			import mx.rpc.events.FaultEvent;
 			import mx.rpc.events.ResultEvent;
 			import Group.W_Group;
+			import PopularProduct.W_PopularProduct;
 			import Shipping.W_Shipping;
 			import User.W_User;
+			
+			protected function pageLoad():void
+			{
+				var login:YosemiteLogin = new YosemiteLogin();
+				PopUpManager.addPopUp(login, this, true);
+				PopUpManager.centerPopUp(login);
+			}
 			
 			protected function btnSend_clickHandler(event:MouseEvent):void
 			{
@@ -65,6 +73,13 @@
 				PopUpManager.addPopUp(user, this, true);
 				PopUpManager.centerPopUp(user);		
 			}
+			
+			public function openPopProductManagement():void
+			{	
+				var popProduct:W_PopularProduct= new W_PopularProduct();
+				PopUpManager.addPopUp(popProduct, this, true);
+				PopUpManager.centerPopUp(popProduct);
+			}
 		]]>	
 	</fx:Script>
 	
@@ -82,8 +97,7 @@
 		</s:layout>
 		<s:Button id="btn0"  label="网站菜单管理" click="openChannelManagement()"/>
 		<s:Button id="btn1"  label="商品管理" click="openProductManagement()"/>
-		<s:Button id="btn2"  label="首页展示商品管理" click="openChannelManagement()"/>
-		<s:Button id="btn3"  label="首页人气商品管理" click="openChannelManagement()"/>
+		<s:Button id="btn2"  label="展示商品管理" click="openPopProductManagement()"/>
 	</s:Panel>
 	
 	<s:Panel width="250" height="200" title="">

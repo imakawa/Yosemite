@@ -27,7 +27,7 @@
 			
 			import Shipping.Shipping;
 
-			protected function pageLoad(){
+			protected function pageLoad():void{
 				chanelService.Read();
 				shippingService.Read();
 			}
@@ -59,9 +59,11 @@
 				var selectedChanel:ChanelVO =this.chanelId.selectedItem; 
 				productDo.chanelId = selectedChanel.id;
 				
-				var dateFormatter:DateFormatter = new DateFormatter();
+/*				var dateFormatter:DateFormatter = new DateFormatter();
 				dateFormatter.formatString = "YYMM-DDJJ-NNSS";
-				productDo.code = dateFormatter.format(new Date());
+				productDo.code = dateFormatter.format(new Date());*/
+				
+				productDo.code=selectedChanel.code+this.productCode.text;
 				
 				productDo.name= this.productName.text;
 				
@@ -89,7 +91,8 @@
 				productDo.imageView= this.imageView.text;
 				
 				var arr:Array=this.images.text.split(";");
-				productDo.images = arr;
+				var imagesArr:ArrayCollection=new ArrayCollection(arr);
+				productDo.images = imagesArr;
 				
 				var selectedShipping:Shipping= this.shippingId.selectedItem;
 				productDo.shippingCode = selectedShipping.id;
@@ -121,6 +124,9 @@
 		<s:DropDownList id="chanelId" labelField="name"/>
 		<s:Label textAlign="center" text="产品名称: "/> 
 		<s:TextInput id="productName" width="200"/>
+		<s:Label textAlign="center" text="商品标示码: "/> 
+		<s:Label textAlign="center" text="{this.chanelId.selectedItem.code}"/> 
+		<s:TextInput id="productCode" width="150"/>
 	</s:Group>
 	<mx:HRule width="100%"/>
 	

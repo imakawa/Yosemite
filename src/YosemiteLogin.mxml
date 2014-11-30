@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Panel xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		 xmlns:s="library://ns.adobe.com/flex/spark" 
+		 xmlns:mx="library://ns.adobe.com/flex/mx" width="300" height="250" title="管理员登陆">
+	<fx:Declarations>
+		<mx:RemoteObject id="userService" destination="UserService" fault="{agent_faultHandler(event);}">
+			<mx:method name="Read" result="{showdata(event);}"/>
+		</mx:RemoteObject>
+	</fx:Declarations>
+	
+	<fx:Script>
+		<![CDATA[
+			import mx.collections.ArrayCollection;
+			import mx.controls.Alert;
+			import mx.events.AdvancedDataGridEvent;
+			import mx.managers.PopUpManager;
+			import mx.rpc.events.FaultEvent;
+			import mx.rpc.events.ResultEvent;
+			
+			import User.UserInfo;
+			import User.W_User_Create;
+			
+			
+			protected function showdata(event:ResultEvent):void
+			{
+				var users:ArrayCollection = ArrayCollection(event.result);
+				
+				for(var i:int=0;i<users.length;i++){
+					var user:UserInfo = users.getItemAt(i) as UserInfo;
+					if(user.username==this.uusername.text && user.password==this.upassword.text){
+						PopUpManager.removePopUp(this);
+						return;
+					}
+				}
+				this.msg.text="账户验证失败。";
+			}
+			
+			protected function agent_faultHandler(event:FaultEvent):void
+			{
+				Alert.show("失败信:"+event.message.toString());
+			}
+			
+			protected function btnLogin_clickHandler():void
+			{
+				userService.Read();
+			}
+		]]>
+	</fx:Script>
+	
+	<s:layout>
+		<s:VerticalLayout/>
+	</s:layout>
+
+	<s:Label id="msg" text="" color="red"/> 
+	<s:Group>
+		<s:layout>
+			<s:HorizontalLayout/>
+		</s:layout>
+		<s:Label text="账号: "/> 
+		<s:TextInput id="uusername" width="200"/>
+	</s:Group>
+	
+	<s:Group>
+		<s:layout>
+			<s:HorizontalLayout/>
+		</s:layout>
+		<s:Label text="密码:"/> 
+		<s:TextInput id="upassword" displayAsPassword="true" width="200" />
+	</s:Group>
+	
+	<mx:Button id="btnLogin"  label="系统登陆" click="btnLogin_clickHandler()" />
+</s:Panel>

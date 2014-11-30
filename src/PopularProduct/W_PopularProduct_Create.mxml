@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Panel xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		 xmlns:s="library://ns.adobe.com/flex/spark" 
+		 xmlns:mx="library://ns.adobe.com/flex/mx" width="400" height="300" creationComplete="pageLoad()">
+	<s:layout>
+		<s:VerticalLayout/>
+	</s:layout>
+	
+	<fx:Script>
+		<![CDATA[
+			import mx.collections.ArrayCollection;
+			import mx.controls.Alert;
+			import mx.managers.PopUpManager;
+			import mx.rpc.events.FaultEvent;
+			import mx.rpc.events.ResultEvent;
+			
+			protected function pageLoad():void{
+				productService.Read()
+			}
+			
+			protected function showData(event:ResultEvent):void
+			{
+				product.dataProvider = ArrayCollection(event.result);
+			}
+			
+			protected function btnClose_clickHandler():void
+			{
+				PopUpManager.removePopUp(this);
+			}
+			protected function btnCreate_clickHandler():void
+			{				
+				var popProduct:PopularProduct=new PopularProduct();
+				if(this.indexProduct.selected){
+					popProduct.indexProduct = "1";
+				}else{
+					popProduct.hotProduct ="1";
+				}
+				
+				var product:ProductVO = this.product.selectedItem as ProductVO;
+				popProduct.productId = product.id;
+				popProductService.Create(popProduct);
+			}
+			protected function agent_faultHandler(event:FaultEvent):void
+			{
+				Alert.show("失败信:"+event.message.toString());
+			}
+		]]>
+	</fx:Script>
+	
+	<fx:Declarations>
+		<mx:RemoteObject id="popProductService" destination="PopularProductService" fault="{agent_faultHandler(event);}">
+			<mx:method name="Create" result="{btnClose_clickHandler();}"/>
+		</mx:RemoteObject>
+		
+		<mx:RemoteObject id="productService" destination="ProductService" fault="{agent_faultHandler(event);}">
+			<mx:method name="Read" result="{showData(event);}"/>
+		</mx:RemoteObject>
+	</fx:Declarations>
+	<mx:Button id="btnClose"  label="关闭页面" click="btnClose_clickHandler()" />
+	
+	<s:Group>
+		<s:layout>
+			<s:HorizontalLayout/>
+		</s:layout>
+		<s:RadioButton groupName="myRadioButtonGroup" id="indexProduct" label="首页展示"/>
+		<s:RadioButton groupName="myRadioButtonGroup" id="hotProduct" label="人气商品" selected="true"/>
+	</s:Group>
+	
+	<s:Group>
+		<s:layout>
+			<s:HorizontalLayout/>
+		</s:layout>
+		<s:Label text="商品名称:"/> 
+		<s:DropDownList id="product" labelField="name" width="300"/>
+	</s:Group>
+	
+	<mx:Button id="btnCreate"  label="登録" click="btnCreate_clickHandler()" /></s:Panel>

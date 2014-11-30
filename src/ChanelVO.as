@@ -8,8 +8,9 @@ package
 		public var req:int;
 		public var name:String;
 		public var action:String;
+		public var code:String;
 		
-		public function ChanelVos()
+		public function ChanelVO()
 		{
 			
 		}

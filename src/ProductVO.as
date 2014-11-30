@@ -1,5 +1,6 @@
 package
 {
+	import mx.collections.ArrayCollection;
 	[Bindable]
 	[RemoteClass(alias="model.Product")]
 	public class ProductVO
@@ -25,7 +26,7 @@ package
 		
 		public var imageView:String;
 		
-		public var images:Array;
+		public var images:ArrayCollection;
 		
 		public var imagesJson:String;
 		

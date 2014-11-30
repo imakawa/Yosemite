@@ -63,6 +63,7 @@
 					return;
 				}
 				var productUpdate:W_Product_Update = new W_Product_Update();
+				productUpdate.owner= this;
 				PopUpManager.addPopUp(productUpdate, this, true);
 				PopUpManager.centerPopUp(productUpdate);
 		    }
@@ -103,15 +104,16 @@
 		<mx:AdvancedDataGrid id="productData" height="400" editable="false">
 			<mx:columns>
 				<mx:AdvancedDataGridColumn headerText="ID" width="200" dataField="id" />
-				<mx:AdvancedDataGridColumn headerText="name" dataField="name" />
-				<mx:AdvancedDataGridColumn headerText="price1">
+				<mx:AdvancedDataGridColumn headerText="name" dataField="name" width="200" />
+				<mx:AdvancedDataGridColumn headerText="商品标示码" dataField="code"  width="200"/>
+				<mx:AdvancedDataGridColumn headerText="price1" width="150">
 					<mx:itemRenderer>  
 						<fx:Component> 
 							<mx:Label text="{data.price.price1}"/>  
 						</fx:Component>  
 					</mx:itemRenderer>  
 				</mx:AdvancedDataGridColumn>
-				<mx:AdvancedDataGridColumn headerText="price2" dataField="price" >
+<!--				<mx:AdvancedDataGridColumn headerText="price2" dataField="price" >
 					<mx:itemRenderer>  
 						<fx:Component> 
 							<mx:Label text="{data.price.price2}"/>  
@@ -154,7 +156,7 @@
 							<mx:Label text="{data.descripe4.chInfo}"/>  
 						</fx:Component>  
 					</mx:itemRenderer>  
-				</mx:AdvancedDataGridColumn>
+				</mx:AdvancedDataGridColumn>-->
 			</mx:columns>
 		</mx:AdvancedDataGrid>
 	</s:Group>
