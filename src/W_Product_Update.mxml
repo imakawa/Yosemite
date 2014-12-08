@@ -11,6 +11,7 @@
 		
 		<mx:RemoteObject id="service" destination="ProductService" fault="{agent_faultHandler(event);}">
 			<mx:method name="Update" result="{btnClose_clickHandler();}"/>
+			<mx:method name="Create" result="{btnClose_clickHandler();}"/>
 		</mx:RemoteObject>
 		
 		<mx:RemoteObject id="chanelService" destination="ChanelService" fault="{agent_faultHandler(event);}">
@@ -42,16 +43,6 @@
 				var wproduct:W_Product= this.owner as W_Product;
 				var selectedProduct:ProductVO = wproduct.productData.selectedItem as ProductVO;
 				
-				
-				/*this.chanelId.selectedItem.id = selectedProduct.chanelId;*/
-				
-				for(var i:int=0;i<this.chanelId.dataProvider;i++){
-					var chanel:ChanelVO= this.chanelId.dataProvider.getItemAt(i) as ChanelVO;
-					if(chanel.id==selectedProduct.chanelId){
-						this.chanelId.selectedItem =chanel;
-					}
-				}
-				
 				this.productName.text = selectedProduct.name;
 				this.productCode.text=selectedProduct.code;
 				this.weight.text= selectedProduct.weightInfo;
@@ -80,10 +71,10 @@
 				this.imageView.text=selectedProduct.imageView;
 				
 				var imagesStr:String="";
-				for(var i:int=0;i<selectedProduct.images.length;i++){
-					var imageInfo:String = selectedProduct.images.getItemAt(i) as String;
+				for(var j:int=0;j<selectedProduct.images.length;j++){
+					var imageInfo:String = selectedProduct.images.getItemAt(j) as String;
 					imagesStr = imagesStr +imageInfo;
-					if(i!=selectedProduct.images.length-1){
+					if(j!=selectedProduct.images.length-1){
 						imagesStr = imagesStr + ";";
 					}
 				}
@@ -92,12 +83,37 @@
 			
 			protected function ShowChanelData(event:ResultEvent):void
 			{
-				this.chanelId.dataProvider =ArrayCollection(event.result); 
+				var col:ArrayCollection= event.result  as ArrayCollection;
+				this.chanelId.dataProvider =col;
+				
+				var wproduct:W_Product= this.owner as W_Product;
+				var selectedProduct:ProductVO = wproduct.productData.selectedItem as ProductVO;
+				
+				for(var i:int=0;i<col.length;i++){
+					var chanel:ChanelVO= this.chanelId.dataProvider.getItemAt(i) as ChanelVO;
+					if(chanel.id==selectedProduct.chanelId){
+						this.chanelId.selectedIndex=i;
+						return;
+					}
+				}
 			}
 			
 			protected function ShowShippingData(event:ResultEvent):void
 			{
-				this.shippingId.dataProvider = ArrayCollection(event.result);
+				var col:ArrayCollection = event.result as ArrayCollection;
+				this.shippingId.dataProvider = col;
+				
+				var wproduct:W_Product= this.owner as W_Product;
+				var selectedProduct:ProductVO = wproduct.productData.selectedItem as ProductVO;
+				
+				for(var i:int=0;i<col.length;i++){
+					var shipping:Shipping= col.getItemAt(i) as Shipping;
+					if(shipping.id==selectedProduct.shippingCode){
+						this.shippingId.selectedIndex=i;
+						return;
+					}
+				}
+				
 			}
 			
 			protected function agent_faultHandler(event:FaultEvent):void
@@ -121,7 +137,7 @@
 				var selectedChanel:ChanelVO =this.chanelId.selectedItem; 
 				productDo.chanelId = selectedChanel.id;
 				
-				productDo.code=selectedChanel.code+this.productCode.text;
+				productDo.code=this.productCode.text;
 				
 				productDo.name= this.productName.text;
 				
@@ -140,10 +156,6 @@
 				
 				var priceInfo:PriceInfo=new PriceInfo();
 				priceInfo.price1= this.price1.text;
-				priceInfo.price2= this.price2.text;
-				priceInfo.price3= this.price3.text;
-				priceInfo.price4= this.price4.text;
-				priceInfo.price5= this.price5.text;
 				productDo.price = priceInfo;
 				
 				productDo.imageView= this.imageView.text;
@@ -152,17 +164,44 @@
 				var imagesArr:ArrayCollection=new ArrayCollection(arr);
 				productDo.images = imagesArr;
 				
-				var selectedShipping:Shipping= this.shippingId.selectedItem;
-				productDo.shippingCode = selectedShipping.id;
-				
-				productDo.weightInfo = this.weight.text;
-				
-				if(this.inStock1.selected){
-					productDo.isInStock="1"
-				}else{
-					productDo.isInStock="0"
-				}
 				service.Update(productDo);
+			}
+			
+			protected function btnCreate2_clickHandler():void
+			{
+				var productDo:ProductVO=new ProductVO();
+				
+				var selectedChanel:ChanelVO =this.chanelId.selectedItem; 
+				productDo.chanelId = selectedChanel.id;
+				
+				productDo.code=this.productCode.text;
+				
+				productDo.name= this.productName.text;
+				
+				var descripe1:CommentInfo= new CommentInfo();
+				descripe1.chInfo= this.des.text
+				var descripe2:CommentInfo= new CommentInfo();
+				descripe2.chInfo= this.des1.text
+				var descripe3:CommentInfo= new CommentInfo();
+				descripe3.chInfo= this.des2.text
+				var descripe4:CommentInfo= new CommentInfo();
+				descripe4.chInfo= this.des3.text
+				productDo.descripe1=descripe1
+				productDo.descripe2=descripe2
+				productDo.descripe3=descripe3
+				productDo.descripe4=descripe4
+				
+				var priceInfo:PriceInfo=new PriceInfo();
+				priceInfo.price1= this.price1.text;
+				productDo.price = priceInfo;
+				
+				productDo.imageView= this.imageView.text;
+				
+				var arr:Array=this.images.text.split(";");
+				var imagesArr:ArrayCollection=new ArrayCollection(arr);
+				productDo.images = imagesArr;
+				
+				service.Create(productDo);
 			}
 		]]>
 	</fx:Script>
@@ -179,7 +218,7 @@
 			<s:HorizontalLayout/>
 		</s:layout>
 		<s:Label textAlign="center" text="所属菜单: "/>
-		<s:DropDownList id="chanelId" labelField="name"/>
+		<s:DropDownList id="chanelId" labelField="name" selectedIndex="1"/>
 		<s:Label textAlign="center" text="产品名称: "/> 
 		<s:TextInput id="productName" width="200"/>
 		<s:Label textAlign="center" text="商品标示码: "/> 
@@ -265,4 +304,5 @@
 	</s:Group>
 	<mx:HRule width="100%"/>
 	<mx:Button id="btnCreate"  label="更新到数据库" click="btnCreate_clickHandler()" />
+	<mx:Button id="btnCreate2"  label="追加到数据库" click="btnCreate2_clickHandler()" />
 </s:Panel>

@@ -10,10 +10,10 @@
 		<mx:RemoteObject id="chanelService" destination="ChanelService" fault="{agent_faultHandler(event);}">
 			<mx:method name="Read" result="{ShowChanelData(event);}"/>
 		</mx:RemoteObject>
-
+<!--
 		<mx:RemoteObject id="shippingService" destination="ShippingService" fault="{agent_faultHandler(event);}">
 			<mx:method name="Read" result="{ShowShippingData(event);}"/>
-		</mx:RemoteObject>
+		</mx:RemoteObject>-->
 	</fx:Declarations>
 	
 	<fx:Script>
@@ -29,7 +29,7 @@
 
 			protected function pageLoad():void{
 				chanelService.Read();
-				shippingService.Read();
+				/*shippingService.Read();*/
 			}
 			
 			protected function ShowChanelData(event:ResultEvent):void
@@ -37,10 +37,10 @@
 			 this.chanelId.dataProvider = ArrayCollection(event.result);
 			}
 
-			protected function ShowShippingData(event:ResultEvent):void
+/*			protected function ShowShippingData(event:ResultEvent):void
 			{
 				this.shippingId.dataProvider = ArrayCollection(event.result);
-			}
+			}*/
 			
 			protected function agent_faultHandler(event:FaultEvent):void
 			{
@@ -63,7 +63,7 @@
 				dateFormatter.formatString = "YYMM-DDJJ-NNSS";
 				productDo.code = dateFormatter.format(new Date());*/
 				
-				productDo.code=selectedChanel.code+this.productCode.text;
+				productDo.code=this.productCode.text;
 				
 				productDo.name= this.productName.text;
 				
@@ -82,10 +82,6 @@
 					
 				var priceInfo:PriceInfo=new PriceInfo();
 				priceInfo.price1= this.price1.text;
-				priceInfo.price2= this.price2.text;
-				priceInfo.price3= this.price3.text;
-				priceInfo.price4= this.price4.text;
-				priceInfo.price5= this.price5.text;
 				productDo.price = priceInfo;
 				
 				productDo.imageView= this.imageView.text;
@@ -94,16 +90,6 @@
 				var imagesArr:ArrayCollection=new ArrayCollection(arr);
 				productDo.images = imagesArr;
 				
-				var selectedShipping:Shipping= this.shippingId.selectedItem;
-				productDo.shippingCode = selectedShipping.id;
-				
-				productDo.weightInfo = this.weight.text;
-				
-				if(this.inStock1.selected){
-					productDo.isInStock="1"
-				}else{
-					productDo.isInStock="0"
-				}
 				service.Create(productDo);
 			}
 		]]>
@@ -130,7 +116,7 @@
 	</s:Group>
 	<mx:HRule width="100%"/>
 	
-	<s:Group>
+	<!--<s:Group>
 		<s:layout>
 			<s:HorizontalLayout/>
 		</s:layout>
@@ -142,7 +128,7 @@
 		<s:RadioButton groupName="myRadioButtonGroup" id="inStock1" label="是"/>
 		<s:RadioButton groupName="myRadioButtonGroup" id="inStock2" label="否" selected="true"/>
 	</s:Group>
-	<mx:HRule width="100%"/>
+	<mx:HRule width="100%"/>-->
 	
 	<s:Group>
 		<s:layout>
@@ -150,14 +136,14 @@
 		</s:layout>
 		<s:Label text="价格1: "/> 
 		<s:TextInput id="price1" width="120"/>
-		<s:Label text="价格2: "/> 
+<!--		<s:Label text="价格2: "/> 
 		<s:TextInput id="price2" width="120"/>
 		<s:Label text="价格3: "/> 
 		<s:TextInput id="price3" width="120"/>
 		<s:Label text="价格4: "/> 
 		<s:TextInput id="price4" width="120"/>
 		<s:Label text="价格5: "/> 
-		<s:TextInput id="price5" width="120"/>
+		<s:TextInput id="price5" width="120"/>-->
 	</s:Group>
 	<mx:HRule width="100%"/>
 	

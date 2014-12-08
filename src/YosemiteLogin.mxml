@@ -27,7 +27,7 @@
 				
 				for(var i:int=0;i<users.length;i++){
 					var user:UserInfo = users.getItemAt(i) as UserInfo;
-					if(user.username==this.uusername.text && user.password==this.upassword.text){
+					if(user.username==this.uusername.text && user.password==this.upassword.text && user.groupeCode=="2001"){
 						PopUpManager.removePopUp(this);
 						return;
 					}

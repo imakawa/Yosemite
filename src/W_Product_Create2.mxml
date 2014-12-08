@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Panel xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		 xmlns:s="library://ns.adobe.com/flex/spark" 
+		 xmlns:mx="library://ns.adobe.com/flex/mx" width="800" height="300" creationComplete="pageLoad()">
+	
+	<fx:Declarations>		
+		<mx:RemoteObject id="service" destination="ProductService" fault="{agent_faultHandler(event);}">
+			<mx:method name="Create" result="{btnClose_clickHandler();}"/>
+		</mx:RemoteObject>
+		
+		<mx:RemoteObject id="chanelService" destination="ChanelService" fault="{agent_faultHandler(event);}">
+			<mx:method name="Read" result="{ShowChanelData(event);}"/>
+		</mx:RemoteObject>
+	</fx:Declarations>
+
+	<fx:Script>
+		<![CDATA[
+			import mx.collections.ArrayCollection;
+			import mx.controls.Alert;
+			import mx.managers.PopUpManager;
+			import mx.rpc.events.FaultEvent;
+			import mx.rpc.events.ResultEvent;
+			
+			protected function pageLoad():void{
+				chanelService.Read();
+			}
+			
+			protected function ShowChanelData(event:ResultEvent):void
+			{
+				this.chanelId.dataProvider = ArrayCollection(event.result);
+			}
+			
+			protected function agent_faultHandler(event:FaultEvent):void
+			{
+				Alert.show("失败信:"+event.message.toString());
+			}
+			
+			protected function btnClose_clickHandler():void
+			{
+				PopUpManager.removePopUp(this);
+			}
+			
+	protected function btnCreate_clickHandler():void
+	{
+	     var productDo:ProductVO=new ProductVO();
+		 
+		 var selectedChanel:ChanelVO =this.chanelId.selectedItem; 
+		 productDo.chanelId = selectedChanel.id;
+		 
+		 productDo.name = this.producturl.text;
+		 service.Create(productDo);
+	}
+		]]>
+	</fx:Script>
+	
+	<s:layout>
+		<s:VerticalLayout/>
+	</s:layout>
+	
+	<s:Group>
+		<s:layout>
+			<s:HorizontalLayout/>
+		</s:layout>
+		<s:Label textAlign="center" text="所属菜单: "/>
+		<s:DropDownList id="chanelId" labelField="name"/>
+	</s:Group>
+		
+	<s:TextInput id="producturl" width="700"/>
+	<mx:Button id="btnCreate"  label="追加到数据库" click="btnCreate_clickHandler()" />
+</s:Panel>

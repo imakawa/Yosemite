@@ -18,7 +18,7 @@
 			import User.W_User;
 			
 			protected function pageLoad():void
-			{
+			{ 
 				var login:YosemiteLogin = new YosemiteLogin();
 				PopUpManager.addPopUp(login, this, true);
 				PopUpManager.centerPopUp(login);
